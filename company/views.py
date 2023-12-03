@@ -4,6 +4,7 @@ from .models import Customer,Expense
 
 # Create your views here.
 def dashboard(request):
+    context={}
     return render(request,'company/dashboard.html')
 
 
