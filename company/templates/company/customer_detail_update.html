@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class='container'>
+    {% if client_update %}
+        <h3>Update Details of  {{client.name}}</h3>
+    {% else %}
+        <h3>update Details of {{intern.name}}</h3>
+    {% endif %}    
+
+   
+        <form method='POST'>
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type='submit' class='btn btn-primary' value='Submit'>
+            {% if client_update %}
+                <a href="{% url 'company:client-list' %}" class="btn btn-danger">Cancel</a>
+            {% else %}
+            <a href="{% url 'company:intern-list' %}" class="btn btn-danger">Cancel</a>
+
+            {% endif %}
+
+        </form>
+
+
+    </div>
+
+
+
+{% endblock content%}

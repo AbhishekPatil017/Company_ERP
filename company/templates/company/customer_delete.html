@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class='container'>
+    
+
+   
+        <form method='POST'>
+            {% csrf_token %}
+            {% if client_delete %}
+
+                <h3>Are you sure you want to remove:  {{client.name}} ?</h3>
+                <button type='submit' class='btn btn-danger' >Yes</button>
+                <a href="{% url 'company:client-list' %}" class='btn btn-primary'>Cancel</a>
+
+            {% else %}
+
+                <h3>Are you sure you want to remove: {{intern.name}} ?</h3>
+                <button type='submit'  class='btn btn-danger' >Yes</button>
+                <a href="{% url 'company:intern-list' %}" class='btn btn-primary'>Cancel</a>
+
+            {% endif %}   
+
+        </form>
+
+
+    </div>
+
+
+
+{% endblock content%}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class='container'>
+
+        <br>
+        <a href="{% url 'company:add-client' %}">Add Client</a><br>
+        
+        <h1>ClientList</h1><br>
+
+        <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Particulars</th>
+                <th scope="col">Email</th>
+                <th scope="col">Joining Date</th>
+                <th scope="col">Action</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+            {% for client in client_list %}
+
+              <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{client.name}}</td>
+                <td>{{client.particulars}}</td>
+                <td>{{client.email}}</td>
+                <td>{{client.joining_date}}</td>
+                <td> <a href="{% url 'company:client-update' client.id %}" class='btn btn-primary'>Update</a> | <a href="{% url 'company:client-delete' client.id %}" class='btn btn-danger'>Delete</a> </td>
+              </tr>
+
+            {% endfor %}
+             
+            </tbody>
+          </table>
+
+    </div>
+
+
+{% endblock content%}
