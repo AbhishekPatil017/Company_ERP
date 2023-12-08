@@ -16,8 +16,13 @@ def dashboard(request):
 
 
 def client_list(request):
+
     search=request.GET.get('search')
-    client_list=Customer.objects.filter(customer_type='client')
+    if search:
+        client_list=Customer.objects.filter(customer_type='client',name__icontains=search)
+
+    else:
+        client_list=Customer.objects.filter(customer_type='client')
     context={'client_list':client_list}
     return render(request,'company/client_list.html',context)
 
@@ -47,6 +52,7 @@ def client_update(request,id):
     return render(request,'company/customer_detail_update.html',context)
 
 def client_delete(request,id):
+
     client=Customer.objects.filter(customer_type='client').get(id=id)
     if request.method == 'POST':
         client.delete()
@@ -72,8 +78,13 @@ def client_invoice(request,id):
 
 
 def intern_list(request):
- 
-    intern_list=Customer.objects.filter(customer_type='intern')
+
+    search=request.GET.get('search')
+    if search:
+        intern_list=Customer.objects.filter(customer_type='intern',name__icontains=search)
+    else:
+        intern_list=Customer.objects.filter(customer_type='intern')
+
     context={'intern_list':intern_list}
     return render(request,'company/intern_list.html',context)
 

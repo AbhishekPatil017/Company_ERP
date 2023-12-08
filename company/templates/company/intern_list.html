@@ -8,6 +8,13 @@
         <a href="{% url 'company:add-intern' %}">Add Intern</a><br>
         
         <h1>InternList</h1><br>
+        
+        <form method='GET'>
+            <input type='text' name='search'>
+            <button class='btn btn-info' type='submit'>Search</button>
+        </form>
+
+        <a href="{% url 'company:intern-list'%}">All</a>
 
         <table class="table table-bordered">
             <thead>

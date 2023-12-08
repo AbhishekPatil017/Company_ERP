@@ -8,7 +8,11 @@
         <a href="{% url 'company:add-client' %}">Add Client</a><br>
         
         <h1>ClientList</h1><br>
-
+        <form method='GET'>
+          <input type='text' name='search'>
+          <button type='submit' class='btn btn-info'>Search</button>
+        </form>
+        <a href="{% url 'company:client-list' %}">All</a>
         <table class="table table-bordered">
             <thead>
               <tr>
