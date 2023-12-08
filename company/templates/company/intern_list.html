@@ -30,7 +30,7 @@
                 <td>{{intern.particulars}}</td>
                 <td>{{intern.email}}</td>
                 <td>{{intern.joining_date}}</td>
-                <td> <a href="{% url 'company:intern-update' intern.id %}" class='btn btn-primary'>Update</a> | <a href="{% url 'company:intern-delete' intern.id %} " class='btn btn-danger'>Delete</a> </td>
+                <td> <a href="{% url 'company:intern-update' intern.id %}" class='btn btn-primary'>View</a> | <a href="{% url 'company:intern-delete' intern.id %} " class='btn btn-danger'>Delete</a> </td>
               </tr>
 
             {% endfor %}

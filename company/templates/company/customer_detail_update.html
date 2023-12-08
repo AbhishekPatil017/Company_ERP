@@ -3,29 +3,69 @@
 {% block content %}
 
 <div class='container'>
-    {% if client_update %}
-        <h3>Update Details of  {{client.name}}</h3>
-    {% else %}
-        <h3>update Details of {{intern.name}}</h3>
-    {% endif %}    
-
    
-        <form method='POST'>
-            {% csrf_token %}
-            {{form.as_p}}
-            <input type='submit' class='btn btn-primary' value='Submit'>
-            {% if client_update %}
-                <a href="{% url 'company:client-list' %}" class="btn btn-danger">Cancel</a>
-            {% else %}
-            <a href="{% url 'company:intern-list' %}" class="btn btn-danger">Cancel</a>
-
-            {% endif %}
-
-        </form>
 
 
     </div>
+    <div class="container">
+        <div class="row">
+          <div class="col">
+            {% if client_update %}
+            <h3>Details of  {{client.name}}</h3>
+        {% else %}
+            <h3>update Details of {{intern.name}}</h3>
+        {% endif %}    
+    
+       
+            <form method='POST'>
+                {% csrf_token %}
+                {{form.as_p}}
+                <input type='submit' class='btn btn-primary' value='Update'>
+                {% if client_update %}
+                    <a href="{% url 'company:client-list' %}" class="btn btn-danger">Cancel</a>
+                {% else %}
+                <a href="{% url 'company:intern-list' %}" class="btn btn-danger">Cancel</a>
+    
+                {% endif %}
+    
+            </form>
+          </div>
+          <div class="col pl-2">
+            {% if client_update %}
+            <a href="{% url 'company:client-invoice' client.id %}">Create Invoice</a>
+            {% else %}
+              <a href="#">Create Invoice</a>
+            {% endif %}
+            <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    
+                    <th scope="col">Invoice No:</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Action</th>
+                  </tr>
+    
+                </thead>
+                <tbody>
+    
+                  {% for invoice in invoice_list %}
 
+                  <tr>
+                    <td>{{invoice.invoice_no}}</td>
+                    <td>{{invoice.customer}}</td>
+                    <td>{{invoice.invoice_date}}</td>
+                    <td>{{invoice.amount}}</td>
+                    <td> <a href="#" class='btn btn-primary'>View</a> |<a href="#" class='btn btn-info'>Update</a>| <a href="#" class='btn btn-danger'>Print</a> </td>
+                  </tr>
+    
+                {% endfor %}
+                 
+                </tbody>
+              </table>
+          </div>
+        </div>
 
 
 {% endblock content%}

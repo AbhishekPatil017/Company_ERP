@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class='container'>
+
+        <br>
+        
+        
+        <h1>Invoice</h1><br>
+        <form method='GET'>
+          <input type='text' name='search'>
+          <button class='btn btn-primary' type='submit'>Submit</button>
+           
+        </form>
+        <a href="{% url 'company:invoice-list' %}">All</a>
+        <br>
+        <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Invoice Number</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Invoice Date</th>
+                <th scope="col">Invoice Amount</th>
+                <th scope="col">Action</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              
+            {% for invoice in invoice_list %}
+
+              <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{invoice.invoice_no}}</td>
+                <td>{{invoice.customer}}</td>
+                <td>{{invoice.invoice_date}}</td>
+                <td>{{invoice.amount}}</td>
+                <td> <a href="#" class='btn btn-primary'>View</a> |<a href="#" class='btn btn-danger'>Print</a> </td>
+              </tr>
+
+            {% endfor %}
+             
+            </tbody>
+          </table>
+
+    </div>
+
+
+{% endblock content%}

@@ -26,6 +26,16 @@ class Customer(models.Model):
     def __str__(self):
         return f'{self.name}'
     
+class Invoice(models.Model):
+  
+    
+    customer = models.ForeignKey(Customer,on_delete=models.CASCADE)
+    invoice_no=models.CharField(max_length=10,default=0)
+    invoice_date=models.DateField(null=True,blank=True) 
+    amount=models.CharField(max_length=120,null=True,blank=True)  
+
+    def __str__(self):
+        return f'{self.customer.name}'
 
 class Expense(models.Model):
     
