@@ -21,18 +21,18 @@ class Customer(models.Model):
     registered_date=models.DateField(auto_now_add=True)
     joining_date=models.DateField()
     duration=models.CharField(max_length=120,blank=True,null=True)
-    amount=models.CharField(max_length=10)
+    
 
     def __str__(self):
         return f'{self.name}'
     
 class Invoice(models.Model):
-  
-    
+     
     customer = models.ForeignKey(Customer,on_delete=models.CASCADE)
     invoice_no=models.CharField(max_length=10,default=0)
-    invoice_date=models.DateField(null=True,blank=True) 
-    amount=models.CharField(max_length=120,null=True,blank=True)  
+    invoice_date=models.DateField(auto_now_add=True) 
+    amount=models.CharField(max_length=120,null=True,blank=True) 
+
 
     def __str__(self):
         return f'{self.customer.name}'

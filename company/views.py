@@ -62,13 +62,16 @@ def client_delete(request,id):
 
 def client_invoice(request,id):
 
-    client=Customer.objects.filter(customer_type='client').get(id=id)
-    form=ClientInvoice(client.id)
+    client=Customer.objects.filter(id=id).first()
+    
+    form=ClientInvoice(initial={'customer':client})
 
     if request.method=='POST':
-        form=ClientInvoice(client.id,request.POST)
+        form=ClientInvoice(request.POST,initial={'customer':client})
         if form.is_valid():
-            form.save()
+            customer_invoice=form.save(commit=False)
+            customer_invoice.customer=client
+            customer_invoice.save()
             return redirect('company:client-update',id=client.id)
 
     context={'form':form,client:client,'client_invoice':'client_invoice','client':client}
