@@ -7,7 +7,7 @@ class DateInput(forms.DateInput):
 
 class ClientInvoice(forms.ModelForm):
     
-    customer=forms.CharField(max_length=100, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+# customer=forms.CharField(max_length=100, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     invoice_date=forms.DateField(widget=DateInput)
 
     class Meta:

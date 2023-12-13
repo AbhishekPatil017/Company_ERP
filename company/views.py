@@ -62,22 +62,42 @@ def client_delete(request,id):
 
 def client_invoice(request,id):
 
-    client=Customer.objects.filter(id=id).first()
+    client=Customer.objects.get(id=id)
     
-    form=ClientInvoice(initial={'customer':client})
+    form=ClientInvoice(instance=client,initial={'customer':client})
 
     if request.method=='POST':
-        form=ClientInvoice(request.POST,initial={'customer':client})
+        form=ClientInvoice(request.POST)
+        
         if form.is_valid():
-            customer_invoice=form.save(commit=False)
-            customer_invoice.customer=client
-            customer_invoice.save()
-            return redirect('company:client-update',id=client.id)
+            form.save()
+            # customer_invoice.customer=client
+            return redirect('company:client-update',client.id)
 
     context={'form':form,client:client,'client_invoice':'client_invoice','client':client}
     
     return render(request,'company/customer_invoice.html',context)
 
+def client_invoice_delete(request,client_id,invoice_id):
+      client=Customer.objects.get(id=client_id)
+      invoice=Invoice.objects.filter(id=invoice_id)
+      invoice.delete()
+      return redirect('company:client-update',client.id)
+
+def intern_invoice(request,id):
+    intern=Customer.objects.get(id=id)
+    form=ClientInvoice(instance=intern,initial={'customer':intern})
+
+    if request.method=='POST':
+        form=ClientInvoice(request.POST)
+        
+        if form.is_valid():
+            form.save()
+            # customer_invoice.customer=client
+            return redirect('company:intern-update',intern.id)
+
+    context={'form':form,'intern':intern}
+    return render(request,'company/customer_invoice.html',context)
 
 
 def intern_list(request):
@@ -103,13 +123,16 @@ def intern_form(request):
 
 def intern_update(request,id):
     intern=Customer.objects.filter(customer_type='intern').get(id=id)
+    
+    invoice_list=Invoice.objects.filter(customer=intern)
+
     form=InternForm(instance=intern)
     if request.method=='POST':
         form=InternForm(request.POST,instance=intern)
         if form.is_valid():
             form.save()
             return redirect('company:intern-list')
-    context={'form':form,'intern':intern}
+    context={'form':form,'intern':intern,'invoice_list':invoice_list}
     return render(request,'company/customer_detail_update.html',context)
 
 
