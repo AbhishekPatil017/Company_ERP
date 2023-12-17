@@ -24,7 +24,7 @@ class Customer(models.Model):
     
 
     def __str__(self):
-        return f'{self.name}'
+        return self.name
     
 class Invoice(models.Model):
      
@@ -35,7 +35,7 @@ class Invoice(models.Model):
 
 
     def __str__(self):
-        return f'{self.customer.name}'
+        return self.customer
 
 class Expense(models.Model):
     

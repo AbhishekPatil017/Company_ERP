@@ -17,7 +17,7 @@
         {% endif %}    
     
        
-            <form method='POST'>
+            <form method='POST' autocomplete="off">
                 {% csrf_token %}
                 {{form.as_p}}
                 <input type='submit' class='btn btn-primary' value='Update'>
@@ -59,6 +59,8 @@
                     <td>{{invoice.amount}}</td>
                     {% if client_update %}
                     <td> <a href="#" class='btn btn-primary'>View</a> |<a href="{% url 'company:client-invoice-delete' client.id invoice.id %}" class='btn btn-danger'>delete</a></td>
+                    {% else %}
+                    <td> <a href="#" class='btn btn-primary'>View</a> |<a href="{% url 'company:intern-invoice-delete' intern.id invoice.id %}" class='btn btn-danger'>delete</a></td>
                     {% endif %}
                   </tr>
     

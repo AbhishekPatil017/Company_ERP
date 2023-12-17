@@ -1,23 +1,24 @@
 from django import forms
+
 from .models import Customer,Expense,Invoice
 
 
 class DateInput(forms.DateInput):
     input_type='date'
 
-class ClientInvoice(forms.ModelForm):
+class CustomerInvoice(forms.ModelForm):
     
-# customer=forms.CharField(max_length=100, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+    customer=forms.Select(attrs={'disabled': 'disabled',})
     invoice_date=forms.DateField(widget=DateInput)
 
     class Meta:
         model=Invoice
         fields='__all__'
 
-    # def __init__(self,client,*args,**kwargs):
-    #     super(ClientInvoice,self).__init__(*args,**kwargs)
-    #     client = Customer.objects.get(id=client)
-    #     self.fields['customer'].initial = client
+    # def __init__(self,customer,*args,**kwargs):
+    #     super(CustomerInvoice,self).__init__(*args,**kwargs)
+    #     customer = Customer.objects.filter(id=customer).first()
+    #     self.fields['customer'].initial = customer
         
 
 

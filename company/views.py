@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .forms import ClientForm,InternForm,ExpenseForm,ClientInvoice
+from .forms import ClientForm,InternForm,ExpenseForm,CustomerInvoice
 from .models import Customer,Expense,Invoice
 from django.core.paginator import Paginator
 import datetime
@@ -62,21 +62,20 @@ def client_delete(request,id):
 
 def client_invoice(request,id):
 
-    client=Customer.objects.get(id=id)
-    
-    form=ClientInvoice(instance=client,initial={'customer':client})
+    client=Customer.objects.filter(id=id).first()
+    print(type(client.id))
+    form=CustomerInvoice(instance=client,initial={'customer':client})
 
     if request.method=='POST':
-        form=ClientInvoice(request.POST)
-        
+        form=CustomerInvoice(request.POST)
         if form.is_valid():
-            form.save()
-            # customer_invoice.customer=client
+            myform=form.save()
+            print()     
             return redirect('company:client-update',client.id)
 
     context={'form':form,client:client,'client_invoice':'client_invoice','client':client}
-    
     return render(request,'company/customer_invoice.html',context)
+
 
 def client_invoice_delete(request,client_id,invoice_id):
       client=Customer.objects.get(id=client_id)
@@ -85,11 +84,11 @@ def client_invoice_delete(request,client_id,invoice_id):
       return redirect('company:client-update',client.id)
 
 def intern_invoice(request,id):
-    intern=Customer.objects.get(id=id)
-    form=ClientInvoice(instance=intern,initial={'customer':intern})
+    intern=Customer.objects.filter(id=id).first()
+    form=CustomerInvoice(instance=intern,initial={'customer':intern})
 
     if request.method=='POST':
-        form=ClientInvoice(request.POST)
+        form=CustomerInvoice(request.POST)
         
         if form.is_valid():
             form.save()
@@ -99,6 +98,12 @@ def intern_invoice(request,id):
     context={'form':form,'intern':intern}
     return render(request,'company/customer_invoice.html',context)
 
+
+def intern_invoice_delete(request,intern_id,invoice_id):
+      intern=Customer.objects.get(id=intern_id)
+      invoice=Invoice.objects.filter(id=invoice_id)
+      invoice.delete()
+      return redirect('company:intern-update',intern.id)
 
 def intern_list(request):
 
@@ -164,10 +169,6 @@ def expense_form(request):
 def invoice_list(request):
 
     search=request.GET.get('search')
-    # date1=request.GET.get('date1')
-    # date2=request.GET.get('date2')
-    # invoice_list=Customer.objects.filter(date1__gte=datetime.date(date1),
-    #                                  date2__lte=datetime.date(date2))
     if search:
        invoice_list=Invoice.objects.filter(customer__name__icontains = search)
     else:

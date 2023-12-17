@@ -3,7 +3,7 @@ from .views import ( dashboard,
                      client_form,client_list,client_delete,client_update,client_invoice,client_invoice_delete,
                      intern_form,intern_list,intern_update,intern_delete,
                      expense_form,expense_list,
-                     invoice_list,intern_invoice)
+                     invoice_list,intern_invoice,intern_invoice_delete)
 
 app_name='company'
 
@@ -25,6 +25,7 @@ urlpatterns = [
     path('intern-update/<str:id>/',intern_update,name='intern-update'),
     path('intern-delete/<str:id>/',intern_delete,name='intern-delete'),
     path('invoice-intern/<str:id>/',intern_invoice,name='intern-invoice'),
+    path('intern-invoice-delete/<str:intern_id>/<str:invoice_id>/',intern_invoice_delete,name='intern-invoice-delete'),
     
     path('add-expense/',expense_form,name='add-expense'),
     path('expenses/',expense_list,name='expense-list'),
