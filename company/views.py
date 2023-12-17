@@ -2,7 +2,9 @@ from django.shortcuts import render,redirect
 from .forms import ClientForm,InternForm,ExpenseForm,CustomerInvoice
 from .models import Customer,Expense,Invoice
 from django.core.paginator import Paginator
-import datetime
+from datetime import date
+from datetime import datetime
+from django.db.models import Sum
 
 # Create your views here.
 def dashboard(request):
@@ -176,3 +178,39 @@ def invoice_list(request):
 
     context={'invoice_list':invoice_list}
     return render(request,'company/invoice_list.html',context)
+
+
+def report_income_expenses(request):
+
+    total_income=Invoice.objects.aggregate(Sum('amount'))
+    total_expenses=Expense.objects.aggregate(Sum('amount'))
+    invoice=Invoice.objects.all()
+    expense=Expense.objects.all()
+
+    if request.method=='POST':
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        
+        if  end_date is '' :
+             end_date=date.today()
+        # print(start_date_str,end_date_str)
+        # start_date = datetime.strptime(str(start_date_str), '%Y-%m-%d').date()
+        # end_date = datetime.strptime(str(end_date_str), '%Y-%m-%d').date()
+        
+        invoices=Invoice.objects.filter(invoice_date__range=(start_date, end_date))
+        expenses = Expense.objects.filter(date__range=(start_date, end_date))
+
+        total_income=Invoice.objects.filter(invoice_date__range=(start_date, end_date)).aggregate(Sum('amount'))
+
+
+
+        context={'total_income':int(total_income['amount__sum']),'total_expenses':int(total_expenses['amount__sum']),
+             'invoices':invoices,'expenses':expenses}
+        
+        return render(request,'company/report_list.html',context)
+
+  
+    context={'total_expenses':int(total_expenses['amount__sum']),
+            }
+    return render(request,'company/report_list.html',context)
+

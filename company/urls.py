@@ -2,7 +2,7 @@ from django.urls import path
 from .views import ( dashboard,
                      client_form,client_list,client_delete,client_update,client_invoice,client_invoice_delete,
                      intern_form,intern_list,intern_update,intern_delete,
-                     expense_form,expense_list,
+                     expense_form,expense_list,report_income_expenses,
                      invoice_list,intern_invoice,intern_invoice_delete)
 
 app_name='company'
@@ -29,5 +29,6 @@ urlpatterns = [
     
     path('add-expense/',expense_form,name='add-expense'),
     path('expenses/',expense_list,name='expense-list'),
+    path('report/',report_income_expenses,name='report')
 
 ]

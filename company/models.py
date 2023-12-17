@@ -35,7 +35,7 @@ class Invoice(models.Model):
 
 
     def __str__(self):
-        return self.customer
+        return f'{self.customer}'
 
 class Expense(models.Model):
     
@@ -44,4 +44,4 @@ class Expense(models.Model):
     date=models.DateField(auto_now=True)
 
     def __str__(self):
-        return f'{self.expense}'
+        return f'{self.name}'
