@@ -13,7 +13,7 @@ def dashboard(request):
     intern_total=Customer.objects.filter(customer_type='intern').count()
 
     context={'client_total':client_total,'intern_total':intern_total}
-    return render(request,'company/dashboard.html',context)
+    return render(request,'dashboard.html',context)
 
 
 
@@ -197,14 +197,14 @@ def report_income_expenses(request):
         # start_date = datetime.strptime(str(start_date_str), '%Y-%m-%d').date()
         # end_date = datetime.strptime(str(end_date_str), '%Y-%m-%d').date()
         
-        invoices=Invoice.objects.filter(invoice_date__range=(start_date, end_date))
+        invoices=Invoice.objects.filter(invoice_date__range=(start_date, str(end_date)))
         expenses = Expense.objects.filter(date__range=(start_date, end_date))
 
         total_income=Invoice.objects.filter(invoice_date__range=(start_date, end_date)).aggregate(Sum('amount'))
 
 
 
-        context={'total_income':int(total_income['amount__sum']),'total_expenses':int(total_expenses['amount__sum']),
+        context={'total_income':str(total_income['amount__sum']),'total_expenses':str(total_expenses['amount__sum']),
              'invoices':invoices,'expenses':expenses}
         
         return render(request,'company/report_list.html',context)
