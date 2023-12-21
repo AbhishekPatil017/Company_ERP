@@ -213,4 +213,3 @@ def report_income_expenses(request):
     context={'total_expenses':int(total_expenses['amount__sum']),
             }
     return render(request,'company/report_list.html',context)
-
