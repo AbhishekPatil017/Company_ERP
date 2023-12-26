@@ -3,7 +3,6 @@ from .forms import LoginForm,CompanyRegisterForm
 from django.contrib.auth import login,authenticate,logout
 # Create your views here.
 
-
 def login_user(request):
     if request.user.is_authenticated:
         return redirect('company:dashboard')
@@ -12,29 +11,25 @@ def login_user(request):
         if request.method=='POST':
             form=LoginForm(request.POST)
             if form.is_valid():
-                username=form.cleaned_data.get('username')
-                password=form.cleaned_data.get('password')
+                username=form.cleaned_data['username']
+                password=form.cleaned_data['password']
                 user=authenticate(username=username,password=password)
-                if user is not None and user.is_admin:
-                    return redirect('company:dashboard')
-                elif user is not None and user.is_company:
-                    return redirect('company:dashboard')
-    
+                if user is not None:
+                    login(request,user)
+                return redirect('company:dashboard')
     context={'form':form}
     return render(request,'myadmin/login_form.html',context)
 
-
 def logout_user(request):
-    pass
+    logout(request)
+    return redirect('login')
 
-def register_user(request):
+def company_register(request):
     form=CompanyRegisterForm()
-    
     if request.method=='POST':
         form=CompanyRegisterForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('login')
-        
     context={'form':form}
-    return render(request,'myadmin/register_form.html',context)
+    return render(request,'myadmin/login_form.html',context)

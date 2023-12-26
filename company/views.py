@@ -5,14 +5,16 @@ from django.core.paginator import Paginator
 from datetime import date
 from datetime import datetime
 from django.db.models import Sum
+from myadmin.models import Company
 
 # Create your views here.
 def dashboard(request):
 
     client_total=Customer.objects.filter(customer_type='client').count()
     intern_total=Customer.objects.filter(customer_type='intern').count()
+    total_company=Company.objects.all().count()
 
-    context={'client_total':client_total,'intern_total':intern_total}
+    context={'client_total':client_total,'intern_total':intern_total,'total_company':total_company}
     return render(request,'dashboard.html',context)
 
 

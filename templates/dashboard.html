@@ -3,9 +3,12 @@
 
 
 {% load static %}
+
 {% block content %}
 <div class="row">
-                    
+
+    {% if request.user.is_authenticated and request.user.is_company %}     
+
     <div class="col-xl-4 col-sm-6 col-12 d-flex">
         <div style="background: #008b8b45; position:relative;" class="card bg-comman w-100">
             <div class="card-body">
@@ -23,6 +26,7 @@
             </div>
         </div>
     </div>
+
     <div class="col-xl-4 col-sm-6 col-12 d-flex">
         <div style="background: #c7c8db; position:relative;" class="card bg-comman w-100">
             <div class="card-body">
@@ -40,7 +44,27 @@
             </div>
         </div>
     </div>
-   
+    {% else %}
+
+    <div class="col-xl-4 col-sm-6 col-12 d-flex">
+        <div style="background: #c7c8db; position:relative;" class="card bg-comman w-100">
+            <div class="card-body">
+                <div class="db-widgets d-flex justify-content-between align-items-center">
+
+                    <div style="background-color: #636482;	border-radius: 8px;" class="">
+                        <i class="bx bxs-edit icon-blue"></i>
+                        <img src="{% static 'img/icons/dash-icon-01.svg'%}" alt="Dashboard Icon">
+                    </div>
+                    <div class="db-info">
+                        <h6>Total Company Registered</h6>
+                        <h3>{{total_company}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   {% endif %}
 </div>
 
 <div class="row">
