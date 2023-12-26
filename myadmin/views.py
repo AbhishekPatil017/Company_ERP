@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from .forms import LoginForm,CompanyRegisterForm
 from django.contrib.auth import login,authenticate,logout
+from .models import Company
 # Create your views here.
 
 def login_user(request):
@@ -33,3 +34,9 @@ def company_register(request):
             return redirect('login')
     context={'form':form}
     return render(request,'myadmin/login_form.html',context)
+
+def company_list(request):
+
+    companylist=Company.objects.all()
+    context={'company_list':companylist}
+    return render(request,'myadmin/company_list.html',context)

@@ -9,7 +9,9 @@ class User(AbstractUser):
     is_admin=models.BooleanField('is_admin ',default=False)
     is_company=models.BooleanField('is_company ',default=False)
 
+
 class Company(models.Model):
+    
     user=models.OneToOneField(User,on_delete=models.CASCADE)
     name=models.CharField(max_length=255,blank=True)
     address=models.CharField(max_length=140,blank=True)

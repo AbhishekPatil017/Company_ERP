@@ -3,5 +3,46 @@
 {% block content %}
 
 
+<div class='container'>
+
+    <br>
+    
+    <h1>CompanyList</h1><br>
+
+    <form method='GET' autocomplete="off">
+      <input type='text' name='search'>
+      <button type='submit' class='btn btn-info'>Search</button>
+    </form>
+
+    
+    <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Company Name</th>
+            <th scope="col">User ID</th>
+            <th scope="col">Email</th>
+            <th scope="col">Action</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+        {% for company in company_list %}
+
+          <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <td>{{company.name}}</td>
+            <td>{{company.user}}</td>
+            <td>{% if company.email %} {{company.email}} {% else %} None  {% endif %}  </td>
+            <td> <a href="#" class='btn btn-primary'>View</a> | <a href="#" class='btn btn-danger'>Delete</a> </td>
+          </tr>
+
+        {% endfor %}
+         
+        </tbody>
+      </table>
+
+</div>
+
 
 {% endblock content %}
