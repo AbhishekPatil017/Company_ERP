@@ -5,12 +5,12 @@ from myadmin.models import User
 
 
 class Customer(models.Model):
-
+    
     CHOICES=(
         ('intern','Intern'),
         ('client','Client')
     )
-    
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
     name=models.CharField(max_length=150)
     customer_type=models.CharField(max_length=120,choices=CHOICES)
     gst_number=models.CharField(max_length=120,blank=True,null=True)
@@ -26,6 +26,9 @@ class Customer(models.Model):
     def __str__(self):
         return self.name
     
+    # def save(self,*args,**kwargs):
+    #     if self.user_id:
+    #         self.
 class Invoice(models.Model):
      
     customer = models.ForeignKey(Customer,on_delete=models.CASCADE)

@@ -42,7 +42,7 @@ class ClientForm(forms.ModelForm):
 
     class Meta:
         model=Customer
-        fields='__all__'
+        exclude = ["user"]
         
     def __init__(self, *args, **kwargs):
         super(ClientForm, self).__init__(*args, **kwargs)

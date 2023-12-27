@@ -17,7 +17,7 @@ def login_user(request):
                 user=authenticate(username=username,password=password)
                 if user is not None:
                     login(request,user)
-                return redirect('company:dashboard')
+                    return redirect('company:dashboard')
     context={'form':form}
     return render(request,'myadmin/login_form.html',context)
 
@@ -26,6 +26,7 @@ def logout_user(request):
     return redirect('login')
 
 def company_register(request):
+    
     form=CompanyRegisterForm()
     if request.method=='POST':
         form=CompanyRegisterForm(request.POST)
@@ -37,6 +38,12 @@ def company_register(request):
 
 def company_list(request):
 
-    companylist=Company.objects.all()
+    search=request.GET.get('search')
+
+    if search:
+        companylist=Company.objects.filter(name__icontains=search)
+    else:
+        companylist=Company.objects.all()
+
     context={'company_list':companylist}
     return render(request,'myadmin/company_list.html',context)

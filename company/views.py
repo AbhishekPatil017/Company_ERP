@@ -6,27 +6,28 @@ from datetime import date
 from datetime import datetime
 from django.db.models import Sum
 from myadmin.models import Company
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def dashboard(request):
 
-    client_total=Customer.objects.filter(customer_type='client').count()
-    intern_total=Customer.objects.filter(customer_type='intern').count()
+    client_total=Customer.objects.filter(user=request.user,customer_type='client').count()
+    intern_total=Customer.objects.filter(user=request.user,customer_type='intern').count()
     total_company=Company.objects.all().count()
 
     context={'client_total':client_total,'intern_total':intern_total,'total_company':total_company}
     return render(request,'dashboard.html',context)
 
 
-
+@login_required
 def client_list(request):
 
     search=request.GET.get('search')
     if search:
-        client_list=Customer.objects.filter(customer_type='client',name__icontains=search)
+        client_list=Customer.objects.filter(user=request.user,customer_type='client',name__icontains=search)
 
     else:
-        client_list=Customer.objects.filter(customer_type='client')
+        client_list=Customer.objects.filter(user=request.user,customer_type='client')
     context={'client_list':client_list}
     return render(request,'company/client_list.html',context)
 
@@ -35,9 +36,11 @@ def client_list(request):
 def client_form(request):
     form=ClientForm()
     if request.method=='POST':
-        form=ClientForm(request.POST)
+        form=ClientForm(request.POST,initial={'user':request.user})
         if form.is_valid():
-            form.save()
+            customer=form.save(commit=False)
+            customer.user=request.user
+            customer.save()
             return redirect('company:client-list')
     context={'form':form,'client':'client'}
     return render(request,'company/customer_form.html',context)
