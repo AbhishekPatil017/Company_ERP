@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from .forms import LoginForm,CompanyRegisterForm
 from django.contrib.auth import login,authenticate,logout
 from .models import Company
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def login_user(request):
@@ -21,10 +22,12 @@ def login_user(request):
     context={'form':form}
     return render(request,'myadmin/login_form.html',context)
 
+@login_required
 def logout_user(request):
     logout(request)
     return redirect('login')
 
+@login_required
 def company_register(request):
     
     form=CompanyRegisterForm()
@@ -36,6 +39,7 @@ def company_register(request):
     context={'form':form}
     return render(request,'myadmin/login_form.html',context)
 
+@login_required
 def company_list(request):
 
     search=request.GET.get('search')
@@ -47,3 +51,7 @@ def company_list(request):
 
     context={'company_list':companylist}
     return render(request,'myadmin/company_list.html',context)
+
+@login_required
+def company_profile(request):
+    return render(request,'myadmin/register_form.html')

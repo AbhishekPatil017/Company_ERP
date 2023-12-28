@@ -136,3 +136,6 @@ AUTH_USER_MODEL='myadmin.User'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+LOGIN_URL='/login/'
+LOGIN_REDIRECT_URL='/login/'

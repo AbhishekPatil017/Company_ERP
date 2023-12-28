@@ -42,6 +42,7 @@ class Invoice(models.Model):
 
 class Expense(models.Model):
     
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
     name = models.CharField(max_length=120)
     amount = models.CharField(max_length=120)
     date = models.DateField(auto_now=True)

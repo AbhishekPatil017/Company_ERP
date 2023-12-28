@@ -9,6 +9,7 @@ from myadmin.models import Company
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required
 def dashboard(request):
 
     client_total=Customer.objects.filter(user=request.user,customer_type='client').count()
@@ -32,11 +33,11 @@ def client_list(request):
     return render(request,'company/client_list.html',context)
 
 
-
+@login_required
 def client_form(request):
     form=ClientForm()
     if request.method=='POST':
-        form=ClientForm(request.POST,initial={'user':request.user})
+        form=ClientForm(request.POST)
         if form.is_valid():
             customer=form.save(commit=False)
             customer.user=request.user
@@ -45,6 +46,7 @@ def client_form(request):
     context={'form':form,'client':'client'}
     return render(request,'company/customer_form.html',context)
 
+@login_required
 def client_update(request,id):
     client=Customer.objects.filter(customer_type='client').get(id=id)
    
@@ -58,6 +60,7 @@ def client_update(request,id):
     context={'form':form,'client_update':'client_update','client':client,'invoice_list':invoice_list}
     return render(request,'company/customer_detail_update.html',context)
 
+@login_required
 def client_delete(request,id):
 
     client=Customer.objects.filter(customer_type='client').get(id=id)
@@ -67,6 +70,7 @@ def client_delete(request,id):
     context={'client_delete':'client_delete','client':client}
     return render(request,'company/customer_delete.html',context)
 
+@login_required
 def client_invoice(request,id):
 
     client=Customer.objects.filter(id=id).first()
@@ -83,13 +87,14 @@ def client_invoice(request,id):
     context={'form':form,client:client,'client_invoice':'client_invoice','client':client}
     return render(request,'company/customer_invoice.html',context)
 
-
+@login_required
 def client_invoice_delete(request,client_id,invoice_id):
       client=Customer.objects.get(id=client_id)
       invoice=Invoice.objects.filter(id=invoice_id)
       invoice.delete()
       return redirect('company:client-update',client.id)
 
+@login_required
 def intern_invoice(request,id):
     intern=Customer.objects.filter(id=id).first()
     form=CustomerInvoice(instance=intern,initial={'customer':intern})
@@ -105,13 +110,14 @@ def intern_invoice(request,id):
     context={'form':form,'intern':intern}
     return render(request,'company/customer_invoice.html',context)
 
-
+@login_required
 def intern_invoice_delete(request,intern_id,invoice_id):
       intern=Customer.objects.get(id=intern_id)
       invoice=Invoice.objects.filter(id=invoice_id)
       invoice.delete()
       return redirect('company:intern-update',intern.id)
 
+@login_required
 def intern_list(request):
 
     search=request.GET.get('search')
@@ -123,6 +129,7 @@ def intern_list(request):
     context={'intern_list':intern_list}
     return render(request,'company/intern_list.html',context)
 
+@login_required
 def intern_form(request):
     form=InternForm()
     if request.method=='POST':
@@ -133,6 +140,7 @@ def intern_form(request):
     context={'form':form}
     return render(request,'company/customer_form.html',context)
 
+@login_required
 def intern_update(request,id):
     intern=Customer.objects.filter(customer_type='intern').get(id=id)
     
@@ -148,7 +156,7 @@ def intern_update(request,id):
     return render(request,'company/customer_detail_update.html',context)
 
 
-
+@login_required
 def intern_delete(request,id):
     intern=Customer.objects.filter(customer_type='intern').get(id=id)
     if request.method=="POST":
@@ -157,40 +165,45 @@ def intern_delete(request,id):
     context={'intern':intern}
     return render(request,'company/customer_delete.html',context)
 
+@login_required
 def expense_list(request):
     expense_list=Expense.objects.all()
 
     context={'expense_list':expense_list}
     return render(request,'company/expenses_list.html',context)
 
+@login_required
 def expense_form(request):
     form=ExpenseForm()
     if request.method=='POST':
         form=ExpenseForm(request.POST)
         if form.is_valid():
-            form.save()
+            expense=form.save(commit=False)
+            expense.user=request.user
+            expense.save()
             return redirect('company:expense-list')
     context={'form':form}
     return render(request,'company/expenses_form.html',context)
-    
+
+@login_required 
 def invoice_list(request):
 
     search=request.GET.get('search')
     if search:
-       invoice_list=Invoice.objects.filter(customer__name__icontains = search)
+       invoice_list=Invoice.objects.filter(customer__user=request.user,customer__name__icontains = search)
     else:
-        invoice_list=Invoice.objects.all()
+        invoice_list=Invoice.objects.filter(customer__user=request.user)
 
     context={'invoice_list':invoice_list}
     return render(request,'company/invoice_list.html',context)
 
-
+@login_required
 def report_income_expenses(request):
 
     total_income=Invoice.objects.aggregate(Sum('amount'))
     total_expenses=Expense.objects.aggregate(Sum('amount'))
-    invoice=Invoice.objects.all()
-    expense=Expense.objects.all()
+    invoice=Invoice.objects.filter(customer__user=request.user)
+    expense=Expense.objects.filter(customer__user=request.user)
 
     if request.method=='POST':
         start_date = request.POST.get('start_date')
@@ -202,10 +215,10 @@ def report_income_expenses(request):
         # start_date = datetime.strptime(str(start_date_str), '%Y-%m-%d').date()
         # end_date = datetime.strptime(str(end_date_str), '%Y-%m-%d').date()
         
-        invoices=Invoice.objects.filter(invoice_date__range=(start_date, str(end_date)))
+        invoices=Invoice.objects.filter(customer__user=request.user,invoice_date__range=(start_date, str(end_date)))
         expenses = Expense.objects.filter(date__range=(start_date, end_date))
 
-        total_income=Invoice.objects.filter(invoice_date__range=(start_date, end_date)).aggregate(Sum('amount'))
+        total_income=Invoice.objects.filter(customer__user=request.user,invoice_date__range=(start_date, end_date)).aggregate(Sum('amount'))
 
 
 
