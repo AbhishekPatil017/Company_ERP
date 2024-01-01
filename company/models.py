@@ -44,8 +44,9 @@ class Expense(models.Model):
     
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     name = models.CharField(max_length=120)
+    quantity=models.IntegerField(default=1)
     amount = models.CharField(max_length=120)
     date = models.DateField(auto_now=True)
-
+ 
     def __str__(self):
         return f'{self.name}'

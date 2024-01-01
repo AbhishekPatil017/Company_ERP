@@ -2,6 +2,7 @@
 
 {% block content %}
 
+   
     <form method="POST">
         {% csrf_token %}
 
@@ -30,7 +31,7 @@
               </tr>
             </thead>
             <tbody>
-              
+            
             {% for invoice in invoices %}
 
               <tr>
@@ -46,15 +47,26 @@
             {% endfor %}
              
             </tbody>
-          </table> {{expenses}}
+          {% comment %} </table> {{expenses}} {% endcomment %}
 
           <br>
         <table class="table table-bordered">
             <thead>
                 <tr> 
-                    <th scope="col">Total Amount</th>
+                    <th scope="col">Total Income</th>
                     <th scope="col">{{total_income}}</th>
+                    
                 </tr>
+                {% if total_income%}
+                <tr> 
+                  <th scope="col">Total Expense</th>
+                  <th scope="col">{{total_expenses}}</th>
+                </tr>
+                <tr> 
+                  <th scope="col">Balance</th>
+                  <th scope="col">{{balance}}</th>
+                </tr>
+                {% endif %}
             </thead>
        
 

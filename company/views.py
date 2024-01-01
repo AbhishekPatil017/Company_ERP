@@ -8,7 +8,40 @@ from django.db.models import Sum
 from myadmin.models import Company
 from django.contrib.auth.decorators import login_required
 
+from django.http import FileResponse,HttpResponse
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+
+
 # Create your views here.
+def render_to_pdf(invoice):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'filename="invoice_{invoice.invoice_no}.pdf"'
+
+    # Create the PDF object, using the response object as its "file."
+    p = canvas.Canvas(response, pagesize=letter)
+
+    # Add content to the PDF
+    p.drawString(100, 800, f"Invoice {invoice.invoice_no}")
+    p.drawString(100, 780, f"Customer Name: {invoice.customer}")
+    p.drawString(100, 760, f"Date: {invoice.invoice_date}")
+    p.drawString(100, 740, f"Amount: {invoice.amount}")
+    # Add other invoice details as needed
+
+    # Close the PDF object cleanly, and return the response.
+    p.showPage()
+    p.save()
+    return response
+
+def invoice_pdf(request,invoice_id):
+    invoice=Invoice.objects.get(id=invoice_id)
+    return render_to_pdf(invoice)
+
+
+
+
 @login_required
 def dashboard(request):
 
@@ -31,6 +64,8 @@ def client_list(request):
         client_list=Customer.objects.filter(user=request.user,customer_type='client')
     context={'client_list':client_list}
     return render(request,'company/client_list.html',context)
+
+
 
 
 @login_required
@@ -89,6 +124,7 @@ def client_invoice(request,id):
 
 @login_required
 def client_invoice_delete(request,client_id,invoice_id):
+      
       client=Customer.objects.get(id=client_id)
       invoice=Invoice.objects.filter(id=invoice_id)
       invoice.delete()
@@ -96,6 +132,7 @@ def client_invoice_delete(request,client_id,invoice_id):
 
 @login_required
 def intern_invoice(request,id):
+
     intern=Customer.objects.filter(id=id).first()
     form=CustomerInvoice(instance=intern,initial={'customer':intern})
 
@@ -112,6 +149,7 @@ def intern_invoice(request,id):
 
 @login_required
 def intern_invoice_delete(request,intern_id,invoice_id):
+      
       intern=Customer.objects.get(id=intern_id)
       invoice=Invoice.objects.filter(id=invoice_id)
       invoice.delete()
@@ -122,9 +160,9 @@ def intern_list(request):
 
     search=request.GET.get('search')
     if search:
-        intern_list=Customer.objects.filter(customer_type='intern',name__icontains=search)
+        intern_list=Customer.objects.filter(user=request.user,customer_type='intern',name__icontains=search)
     else:
-        intern_list=Customer.objects.filter(customer_type='intern')
+        intern_list=Customer.objects.filter(user=request.user,customer_type='intern')
 
     context={'intern_list':intern_list}
     return render(request,'company/intern_list.html',context)
@@ -135,16 +173,19 @@ def intern_form(request):
     if request.method=='POST':
         form=InternForm(request.POST)
         if form.is_valid():
-            form.save()
+            customer=form.save(commit=False)
+            customer.user=request.user
+            customer.save()
             return redirect('company:intern-list')
     context={'form':form}
     return render(request,'company/customer_form.html',context)
 
 @login_required
 def intern_update(request,id):
-    intern=Customer.objects.filter(customer_type='intern').get(id=id)
+
+    intern=Customer.objects.filter(user=request.user,customer_type='intern').get(id=id)
     
-    invoice_list=Invoice.objects.filter(customer=intern)
+    invoice_list=Invoice.objects.filter(customer__user=request.user,customer=intern)
 
     form=InternForm(instance=intern)
     if request.method=='POST':
@@ -158,6 +199,7 @@ def intern_update(request,id):
 
 @login_required
 def intern_delete(request,id):
+
     intern=Customer.objects.filter(customer_type='intern').get(id=id)
     if request.method=="POST":
         intern.delete()
@@ -167,7 +209,8 @@ def intern_delete(request,id):
 
 @login_required
 def expense_list(request):
-    expense_list=Expense.objects.all()
+
+    expense_list=Expense.objects.filter(user=request.user)
 
     context={'expense_list':expense_list}
     return render(request,'company/expenses_list.html',context)
@@ -203,7 +246,7 @@ def report_income_expenses(request):
     total_income=Invoice.objects.aggregate(Sum('amount'))
     total_expenses=Expense.objects.aggregate(Sum('amount'))
     invoice=Invoice.objects.filter(customer__user=request.user)
-    expense=Expense.objects.filter(customer__user=request.user)
+    expense=Expense.objects.filter(user=request.user)
 
     if request.method=='POST':
         start_date = request.POST.get('start_date')
@@ -219,11 +262,11 @@ def report_income_expenses(request):
         expenses = Expense.objects.filter(date__range=(start_date, end_date))
 
         total_income=Invoice.objects.filter(customer__user=request.user,invoice_date__range=(start_date, end_date)).aggregate(Sum('amount'))
-
+        balance=total_income['amount__sum'] - total_expenses['amount__sum'] 
 
 
         context={'total_income':str(total_income['amount__sum']),'total_expenses':str(total_expenses['amount__sum']),
-             'invoices':invoices,'expenses':expenses}
+             'invoices':invoices,'expenses':expenses,'balance':balance}
         
         return render(request,'company/report_list.html',context)
 
@@ -231,3 +274,20 @@ def report_income_expenses(request):
     context={'total_expenses':str(total_expenses['amount__sum']),
             }
     return render(request,'company/report_list.html',context)
+
+def client_report(request):
+
+    
+    if request.method=='POST':
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+
+        if  end_date is '' :
+            end_date=date.today()
+
+        client_list=Customer.objects.filter(customer_type='client',joining_date__range=(start_date, str(end_date)))
+        total_client=client_list.count()
+        context={'client_list':client_list,'total_client':total_client}
+        return render(request,'company/customer_report.html',context)
+
+    return render(request,'company/customer_report.html')
