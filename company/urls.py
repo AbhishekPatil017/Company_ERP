@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import ( dashboard,
                      client_form,client_list,client_delete,client_update,client_invoice,client_invoice_delete,client_report,
-                     intern_form,intern_list,intern_update,intern_delete,
+                     intern_form,intern_list,intern_update,intern_delete,intern_report,
                      expense_form,expense_list,report_income_expenses,
                      invoice_list,intern_invoice,intern_invoice_delete, invoice_pdf)
 
@@ -24,6 +24,7 @@ urlpatterns = [
     
     path('add-intern/',intern_form,name='add-intern'),
     path('interns/',intern_list,name='intern-list'),
+    path('intern-report/',intern_report,name='intern-report'),
     path('intern-update/<str:id>/',intern_update,name='intern-update'),
     path('intern-delete/<str:id>/',intern_delete,name='intern-delete'),
     path('invoice-intern/<str:id>/',intern_invoice,name='intern-invoice'),

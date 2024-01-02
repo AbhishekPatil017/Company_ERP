@@ -12,7 +12,8 @@
         <label >To :</label>
         <input type="date" name="end_date" >
 
-        <button type="submit" class='btn btn-info'>Generate Report</button>
+        <button type="submit" class='btn btn-primary'>Search</button>
+        <a href="#" class='btn btn-secondary' id="printButton">Print</a>
     </form>
     <br>
               
@@ -31,33 +32,37 @@
               </tr>
             </thead>
             <tbody>
-            
-            {% for invoice in invoices %}
-
-              <tr>
-                <th scope="row">{{forloop.counter}}</th>
-                <td>{{invoice.invoice_date}}</td>
-                <td>{{invoice.invoice_no}}</td>
-                <td>{{invoice.customer}}</td>
-                
-                <td>{{invoice.amount}}</td>
-                
-              </tr>
-
-            {% endfor %}
+            {% if invoices%}
+                {% for invoice in invoices %}
+                  <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{invoice.invoice_date}}</td>
+                    <td>{{invoice.invoice_no}}</td>
+                    <td>{{invoice.customer}}</td>
+                    <td>{{invoice.amount}}</td>
+                  </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                  <div class='d-flex justify-content-center'>
+                    <td colspan="6" class='text-sm-center'>No report found.</td>
+                  </div>
+                </tr>     
+            {% endif %}
              
             </tbody>
           {% comment %} </table> {{expenses}} {% endcomment %}
-
+        </table>
           <br>
         <table class="table table-bordered">
             <thead>
+              {% if total_income %}  
                 <tr> 
                     <th scope="col">Total Income</th>
                     <th scope="col">{{total_income}}</th>
                     
                 </tr>
-                {% if total_income%}
+                
                 <tr> 
                   <th scope="col">Total Expense</th>
                   <th scope="col">{{total_expenses}}</th>
@@ -68,8 +73,12 @@
                 </tr>
                 {% endif %}
             </thead>
-       
+        </table>
 
-
+        <script>
+          document.getElementById("printButton").addEventListener("click", function () {
+              window.print();
+          });
+      </script>
   
 {% endblock content%}

@@ -71,7 +71,10 @@
                                 alt="{{request.user}}">
                             <div class="user-text">
                                 <h6></h6>
-                                <p class="text-muted mb-0">Administrator</p>
+                                {% if request.user.is_authenticated or request.user.is_company %}
+                                    <p class="text-muted mb-0">{{request.user}}</p>
+                                {% endif %}
+
                             </div>
                         </span>
                     </a>
@@ -129,6 +132,7 @@
                             <ul>
                                 <li><a href="{% url 'company:intern-list' %}">All</a></li>
                                 <li><a href="{% url 'company:add-intern' %}">Add Intern</a></li>
+                                <li><a href="{% url 'company:intern-report' %}">Intern Report</a></li>
                                 
                             </ul>
                         </li>
@@ -150,119 +154,19 @@
 
                             </ul>
                         </li>
-                        <li class="submenu">
-                            <a href="#"><i class="fas fa-clipboard"></i> <span> News</span> <span
-                                    class="menu-arrow"></span></a>
-                            <ul>
-                                <li><a href="invoices.html">Add News</a></li>
-                                <li><a href="invoice-grid.html">View News</a></li>
+                        {% if request.user.is_company%}
+                            <li class="submenu">
+                                <a href="#"><i class="fas fa-clipboard"></i> <span> Company Profile</span> <span
+                                        class="menu-arrow"></span></a>
+                                <ul>
+                                    <li><a href="{% url 'company-profile'%}">Update Profile</a></li>
+                                    <li><a href="invoice-grid.html">View News</a></li>
 
-                            </ul>
-                        </li>
-
-                        <li class="submenu">
-                            <a href="#"><i class="fas fa-file-invoice-dollar"></i> <span> Dashboard Ads</span> <span
-                                    class="menu-arrow"></span></a>
-                            <ul>
-                                <li><a href="fees-collections.html">Add</a></li>
-                                <li><a href="add-subject.html">Views</a></li>
-
-                            </ul>
-                        </li>
-                        <li class="submenu">
-                            <a href="#"><i class="fas fa-file-invoice-dollar"></i> <span> Offers</span> <span
-                                    class="menu-arrow"></span></a>
-                            <ul>
-                                <li><a href="form-1.html">Add Offers</a></li>
-                                <li><a href="expenses.html">View Offers</a></li>
-
-                            </ul>
-                        </li>
-                        <li class="submenu">
-                            <a href="#"><i class="fas fa-file-invoice-dollar"></i> <span> Taxi Type</span> <span
-                                    class="menu-arrow"></span></a>
-                            <ul>
-                                <li><a href="form-2.html">Add</a></li>
-                                <li><a href="library.html">View</a></li>
-
-                            </ul>
-                        </li>
-                        <li class="submenu">
-                            <a href="#"><i class="fas fa-file-invoice-dollar"></i> <span>Food Category</span> <span
-                                    class="menu-arrow"></span></a>
-                            <ul>
-                                <li><a href="exam.html">Add</a></li>
-                                <li><a href="event.html">View</a></li>
-
-                            </ul>
-                        </li>
-                        <li class="submenu">
-                            <a href="#"><i class="fas fa-file-invoice-dollar"></i> <span>Refer & Earn</span> <span
-                                    class="menu-arrow"></span></a>
-                            <ul>
-                                <li><a href="form-validation.html">Add</a></li>
-                                <li><a href="form-vertical.html">View</a></li>
-
-                            </ul>
-                        </li>
-                        <li class="">
-                            <a href="taxi-order.html"><i class="fas fa-file-invoice-dollar"></i> <span>Taxi Order
-                                    History</span></span></a>
-                        </li>
-                        <li class="submenu">
-                            <a href="#"><i class="fas fa-file-invoice-dollar"></i> <span>Orders</span> <span
-                                    class="menu-arrow"></span></a>
-                            <ul>
-                                <li><a href="timeline.html">Request</a></li>
-                                <li><a href="toastr.html">In Process</a></li>
-                                <li><a href="salary.html">On Baking</a></li>
-                                <li><a href="modal.html">On Deliverd</a></li>
-                                <li><a href="add-expenses.html">Deliverd</a></li>
-                                <li><a href="add-salary.html">Rejected</a></li>
-                            </ul>
-                        </li>
-                        <li class="">
-                            <a href="transport.html"><i class="fas fa-file-invoice-dollar"></i> <span>Others</span></a>
-                            
-                        </li>
-                        <li class="submenu">
-                            <a href="#"><i class="fas fa-file-invoice-dollar"></i> <span>Business Links</span> <span
-                                    class="menu-arrow"></span></a>
-                            <ul>
-                                <li><a href="lightbox.html">Add Business Links</a></li>
-                                <li><a href="offcanvas.html">View Business Links</a></li>
-
-                            </ul>
-                        </li>
-                        <li class="submenu">
-                            <a href="#"><i class="fas fa-file-invoice-dollar"></i> <span>Affilate Links</span> <span
-                                    class="menu-arrow"></span></a>
-                            <ul>
-                                <li><a href="pending-blog.html">Add Affilate Links</a></li>
-                                <li><a href="popover.html">View Affilate Links</a></li>
-
-                            </ul>
-                        </li>
-                        <li class="submenu">
-                            <a href="#"><i class="fas fa-file-invoice-dollar"></i> <span>Support</span> <span
-                                    class="menu-arrow"></span></a>
-                            <ul>
-                                <li><a href="blog.html">Open Ticket</a></li>
-                                <li><a href="blog-details.html">closed Ticket</a></li>
-
-                            </ul>
-                        </li>
+                                </ul>
+                            </li>          
+                        {% endif %}           
                         <li>
-                            <a href="holiday.html"><i class="fas fa-holly-berry"></i> <span>About</span></a>
-                        </li>
-                        <li>
-                            <a href="fees.html"><i class="fas fa-comment-dollar"></i> <span>Privacy Policy</span></a>
-                        </li>
-                        <li>
-                            <a href="localization-details.html"><i class="fas fa-clipboard-list"></i> <span>Terms & Condition</span></a>
-                        </li>
-                        <li>
-                            <a href="typography.html"><i class="fas fa-calendar-day"></i> <span>Change Password</span></a>
+                            <a href="{% url 'company-passwordchange'%}"><i class="fas fa-calendar-day"></i> <span>Change Password</span></a>
                         </li>
                         <li>
                             <a href="time-table.html"><i class="fas fa-table"></i> <span>Notification</span></a>
@@ -287,16 +191,7 @@
         <div class="page-wrapper">
             <div class="content container-fluid ">
 
-                <div class="page-header">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="page-sub-header">
-                                <h3 class="page-title">Welcome Admin!</h3>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
             
                 {% block content %}
                     

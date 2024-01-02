@@ -3,6 +3,8 @@ from .forms import LoginForm,CompanyRegisterForm
 from django.contrib.auth import login,authenticate,logout
 from .models import Company
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 # Create your views here.
 
 def login_user(request):
@@ -54,4 +56,24 @@ def company_list(request):
 
 @login_required
 def company_profile(request):
-    return render(request,'myadmin/register_form.html')
+    company=Company.objects.get(user=request.user)
+    form=CompanyRegisterForm(instance=company)
+    if request.method=='POST':
+        form=CompanyRegisterForm(request.POST,instance=company)
+        if form.is_valid():
+            form.save()
+            return redirect('company:dashboard')
+    context={'form':form}
+    return render(request,'myadmin/register_form.html',context)
+
+@login_required
+def company_password_change(request):
+    form=PasswordChangeForm(request.user)
+    if request.method=='POST':
+        form=PasswordChangeForm(request.user,request.POST)
+        if form.is_valid():
+            myuser=form.save()
+            update_session_auth_hash(request,myuser)  # To keep the user logged in
+            return redirect('company:dashboard')
+    context={'form':form}
+    return render(request,'myadmin/companypassword_change.html',context)

@@ -252,7 +252,7 @@ def report_income_expenses(request):
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
         
-        if  end_date is '' :
+        if  not end_date:
              end_date=date.today()
         # print(start_date_str,end_date_str)
         # start_date = datetime.strptime(str(start_date_str), '%Y-%m-%d').date()
@@ -277,17 +277,36 @@ def report_income_expenses(request):
 
 def client_report(request):
 
-    
     if request.method=='POST':
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
 
-        if  end_date is '' :
+        if  not end_date:
             end_date=date.today()
 
         client_list=Customer.objects.filter(customer_type='client',joining_date__range=(start_date, str(end_date)))
         total_client=client_list.count()
         context={'client_list':client_list,'total_client':total_client}
-        return render(request,'company/customer_report.html',context)
+        return render(request,'company/client_report.html',context)
 
-    return render(request,'company/customer_report.html')
+    return render(request,'company/client_report.html')
+
+def intern_report(request):
+
+    if request.method=='POST':
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+
+        if not end_date:
+            end_date=date.today()
+
+        intern_list=Customer.objects.filter(customer_type='intern',joining_date__range=(start_date, str(end_date)))
+        print(f'------------->{intern_list}')
+        total_intern=intern_list.count()
+        context={'intern_list':intern_list,'total_intern':total_intern}
+        return render(request,'company/intern_report.html',context)
+    
+    return render(request,'company/intern_report.html')
+
+def expense_report(request):
+    pass

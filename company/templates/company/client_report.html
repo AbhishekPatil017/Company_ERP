@@ -1,0 +1,66 @@
+{% extends "index.html" %}
+
+{% block content %}
+  
+    <h3> Client Report </h3>
+  
+    <form method="POST">
+        {% csrf_token %}
+
+        <label >Search by Date from:</label>
+        <input type="date"  name="start_date" required>
+
+        <label >To :</label>
+        <input type="date" name="end_date" >
+
+        <button type="submit" class='btn btn-primary'>Search</button>
+        <a href="#" class='btn btn-secondary' id="printButton">Print</a>  
+    </form>
+    <br>
+              
+      <br>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Client Name</th>
+                <th scope="col">Client Email</th>
+                <th scope="col">Client Joining Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if client_list %}
+                  {% for client in client_list %}
+                  <tr>
+                      <th scope="row">{{forloop.counter}}</th>
+                      <td>{{client.name}}</td>
+                      <td>{{client.email}}</td>
+                      <td>{{client.joining_date}}</td>               
+                  </tr>
+                  {% endfor %}
+              {% else %}
+                  <tr>
+                    <div class='d-flex justify-content-center'>
+                      <td colspan="6" class='text-sm-center'>No report found.</td>
+                    </div>
+                  </tr>     
+              {% endif %}
+            </tbody>
+          </table>
+          <br>
+          {% if total_client %}
+            <table class="table table-bordered">
+              <thead>
+                  <tr> 
+                      <th scope="col">Total Client</th>
+                      <th scope="col">{{total_client}}</th>
+                  </tr>
+              </thead>
+          {% endif %}
+       
+        <script>
+            document.getElementById("printButton").addEventListener("click", function () {
+                window.print();
+            });
+        </script>
+{% endblock content%}
