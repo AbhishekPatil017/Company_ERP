@@ -1,19 +1,60 @@
 {% extends "index.html" %}
 
 {% load crispy_forms_tags %}
-
 {% block content %}
 
-<div class="d-flex justify-content-center">
-    <form method='POST'>
+<div class="card w-70">
+    <div class='card-body w-70'>
+    {% if companyregister%}    
+        <h2>Company Register</h2>
+    {% else %}
+        <h2>Update Company Details</h2>
+    {% endif%}   
+        <form method='POST'>
 
-        {% csrf_token %}
+            {% csrf_token %}           
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        {{ form.name|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ form.email|as_crispy_field }}
+                    </div>
+                    
+                </div>
 
-        {{form.as_p}}
+                <div class="form-group">
+                    {{ form.address|as_crispy_field }}
+                </div>
 
-        <input type='submit'class='btn btn-primary'  value='submit'>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        {{ form.bank_details|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-4">
+                        {{ form.bank_account|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-4">
+                        {{ form.pan_details|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        {{ form.website|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-4">
+                        {{ form.gst_no|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-4">
+                        {{ form.hsn_sac|as_crispy_field }}
+                    </div>
+                </div>
 
-    </form>
+               
+                <input type='submit'class='btn btn-primary'  value='Register'>      
+                
+        </form>
+    </div>
 </div>
 
 {% endblock content %}
