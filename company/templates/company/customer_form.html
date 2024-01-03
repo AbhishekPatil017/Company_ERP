@@ -50,7 +50,11 @@
 
                
                 <input type='submit'class='btn btn-primary'  value='Register'>      
-                
+                {% if client_form %}
+                    <a href="{% url 'company:client-list'%}" class='btn btn-danger'>Cancel</a>
+                {% else %}
+                    <a href="{% url 'company:intern-list'%}" class='btn btn-danger'>Cancel</a>
+                {% endif%}
         </form>
     </div>
 </div>

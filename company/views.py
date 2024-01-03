@@ -3,10 +3,11 @@ from .forms import ClientForm,InternForm,ExpenseForm,CustomerInvoice
 from .models import Customer,Expense,Invoice
 from django.core.paginator import Paginator
 from datetime import date
-from datetime import datetime
+
 from django.db.models import Sum
 from myadmin.models import Company
 from django.contrib.auth.decorators import login_required
+
 
 from django.http import FileResponse,HttpResponse
 import io
@@ -104,6 +105,8 @@ def client_delete(request,id):
         return redirect('company:client-list')
     context={'client_delete':'client_delete','client':client}
     return render(request,'company/customer_delete.html',context)
+
+
 
 @login_required
 def client_invoice(request,id):
@@ -225,8 +228,28 @@ def expense_form(request):
             expense.user=request.user
             expense.save()
             return redirect('company:expense-list')
+    context={'form':form,'add_expense':'add_expense'}
+    return render(request,'company/expenses_form.html',context)
+
+@login_required
+def expense_update(request,id):
+    expense=Expense.objects.get(id=id)
+    form=ExpenseForm(instance=expense)
+    if request.method=='POST':
+        form=ExpenseForm(request.POST,instance=expense)
+        if form.is_valid():
+            form.save()
+            return redirect('company:expense-list')
     context={'form':form}
     return render(request,'company/expenses_form.html',context)
+
+@login_required
+def expense_delete(request,id):
+    expense=Expense.objects.get(id=id)
+    expense.delete()
+    return redirect('company:expense-list')
+
+
 
 @login_required 
 def invoice_list(request):

@@ -1,19 +1,41 @@
 {% extends "index.html" %}
 
+{% load crispy_forms_tags %}
 {% block content %}
 
-    <div class='container'>  
-        
-        <form method='POST' autocomplete="off">
-            {% csrf_token %}
-            {{form.as_p}}
-            <input type='submit' class='btn btn-primary' value='Submit'>
-            <a href="{% url 'company:expense-list' %}" class='btn btn-danger'>Cancel</a>
-        </form>
+  
+    <div class="card w-70">
+        <div class='card-body w-70'>
+        {% if add_expense%}
+            <h2>Add Expense</h2>
+        {% else %}
+            <h2>Update Expense</h2>
+        {% endif %}
+            <form method='POST'>
+    
+                {% csrf_token %}           
+                      
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            {{ form.name|as_crispy_field }}
+                        </div>
+                       
+                        <div class="form-group col-md-4">
+                            {{ form.quantity|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form.amount|as_crispy_field }}
+                        </div>
+                    </div>  
+                   
+                    <input type='submit'class='btn btn-primary'  value='Submit'>     
+                    <a href="{% url 'company:expense-list'%}" class='btn btn-secondary'>Cancel</a> 
+                    
+            </form>
             
-
+        </div>
     </div>
-
+    
 
 
 {% endblock content%}

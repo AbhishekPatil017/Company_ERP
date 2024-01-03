@@ -37,7 +37,7 @@
                 <td>{{invoice.customer}}</td>
                 <td>{{invoice.invoice_date}}</td>
                 <td>{{invoice.amount}}</td>
-                <td> <a href="#" class='btn btn-primary'>View</a> |<a href="{% url 'company:invoice-pdf' invoice.id %}" class='btn btn-danger'>Print</a> </td>
+                <td> <a href="{% url 'company:invoice-pdf' invoice.id %}" class='btn btn-danger'>Print</a> </td>
               </tr>
 
             {% endfor %}
