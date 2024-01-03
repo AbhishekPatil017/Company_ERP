@@ -2,7 +2,7 @@ from django.urls import path
 from .views import ( dashboard,
                      client_form,client_list,client_delete,client_update,client_invoice,client_invoice_delete,client_report,
                      intern_form,intern_list,intern_update,intern_delete,intern_report,
-                     expense_form,expense_list,report_income_expenses,expense_update,expense_delete,
+                     expense_form,expense_list,report_income_expenses,expense_update,expense_delete,expense_report,
                      invoice_list,intern_invoice,intern_invoice_delete, invoice_pdf)
 
 app_name='company'
@@ -34,6 +34,7 @@ urlpatterns = [
     path('update-expense/<str:id>/',expense_update,name='update-expense'),
     path('delete-expense/<str:id>/',expense_delete,name='delete-expense'),
     path('expenses/',expense_list,name='expense-list'),
+    path('expense-report/',expense_report,name='expense-report'),
 
     path('report/',report_income_expenses,name='report')
 

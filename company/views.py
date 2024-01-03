@@ -284,11 +284,16 @@ def report_income_expenses(request):
         invoices=Invoice.objects.filter(customer__user=request.user,invoice_date__range=(start_date, str(end_date)))
         expenses = Expense.objects.filter(date__range=(start_date, end_date))
 
-        total_income=Invoice.objects.filter(customer__user=request.user,invoice_date__range=(start_date, end_date)).aggregate(Sum('amount'))
-        balance=total_income['amount__sum'] - total_expenses['amount__sum'] 
+        total_income_sum=Invoice.objects.filter(customer__user=request.user,invoice_date__range=(start_date, end_date)).aggregate(Sum('amount'))
+        # total_income=total_income_sum.get('amount__sum',0)
+            
+        total_income = total_income_sum.get('amount__sum', 0)
+        if total_income is not None:
+            balance= total_income -  total_expenses['amount__sum']
+        else:
+            balance=0
 
-
-        context={'total_income':str(total_income['amount__sum']),'total_expenses':str(total_expenses['amount__sum']),
+        context={'total_income':total_income,'total_expenses':str(total_expenses['amount__sum']),
              'invoices':invoices,'expenses':expenses,'balance':balance}
         
         return render(request,'company/report_list.html',context)
@@ -324,7 +329,7 @@ def intern_report(request):
             end_date=date.today()
 
         intern_list=Customer.objects.filter(customer_type='intern',joining_date__range=(start_date, str(end_date)))
-        print(f'------------->{intern_list}')
+       
         total_intern=intern_list.count()
         context={'intern_list':intern_list,'total_intern':total_intern}
         return render(request,'company/intern_report.html',context)
@@ -332,4 +337,14 @@ def intern_report(request):
     return render(request,'company/intern_report.html')
 
 def expense_report(request):
-    pass
+    if request.method=='POST':
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+ 
+        if not end_date:
+            end_date=date.today()
+        expense_list=Expense.objects.filter(user=request.user,date__range=(start_date,str(end_date)))
+        total_expenses=Expense.objects.filter(user=request.user,date__range=(start_date,str(end_date))).aggregate(Sum('amount'))
+        context={'expense_list':expense_list,'total_expenses':total_expenses['amount__sum']}
+        return render(request,'company/expense_report.html',context)
+    return render(request,'company/expense_report.html')

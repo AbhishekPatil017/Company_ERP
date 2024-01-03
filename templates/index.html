@@ -145,6 +145,7 @@
                             <ul>
                                 <li><a href="{% url 'company:expense-list' %}">All</a></li>
                                 <li><a href="{% url 'company:add-expense' %}">Add Expense</a></li>
+                                <li><a href="{% url 'company:expense-report' %}">Expense Report</a></li>
                                 
                             </ul>
                         </li>
@@ -157,23 +158,20 @@
 
                             </ul>
                         </li>
-                        {% if request.user.is_company%}
+                     
                             <li class="submenu">
                                 <a href="#"><i class="fas fa-clipboard"></i> <span> Company Profile</span> <span
                                         class="menu-arrow"></span></a>
                                 <ul>
                                     <li><a href="{% url 'company-profile'%}">Update Profile</a></li>
-                                    <li><a href="invoice-grid.html">View News</a></li>
+                                    <li><a href="{% url 'company-passwordchange'%}">Change Password</a></li>
+                                    
 
                                 </ul>
                             </li>          
-                        {% endif %}           
-                        <li>
-                            <a href="{% url 'company-passwordchange'%}"><i class="fas fa-calendar-day"></i> <span>Change Password</span></a>
-                        </li>
-                        <li>
-                            <a href="time-table.html"><i class="fas fa-table"></i> <span>Notification</span></a>
-                        </li>
+                           
+                        
+                        
                     {% else %}
                         <li class="submenu">
                             <a href="#"><i class="fas fa-graduation-cap"></i> <span>Company</span> <span

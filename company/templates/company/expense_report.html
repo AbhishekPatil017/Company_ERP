@@ -1,0 +1,71 @@
+{% extends "index.html" %}
+
+{% block content %}
+  
+    <h3> Expense Report </h3>
+  
+    <form method="POST">
+        {% csrf_token %}
+
+        <label >Search by Date from:</label>
+        <input type="date"  name="start_date" required>
+
+        <label >To :</label>
+        <input type="date" name="end_date" >
+
+        
+        <button type="submit" class='btn btn-primary'>Search</button>
+        <a href="#" class='btn btn-secondary' id="printButton">Print</a>
+    </form>
+    <br>
+              
+      <br>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Item Name</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Date of Purchase</th>
+                <th scope="col">Amount</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              {% if expense_list %}
+                  {% for expense in expense_list %}
+                  <tr>
+                      <th scope="row">{{forloop.counter}}</th>
+                      <td>{{expense.name}}</td>
+                      <td>{{expense.quantity}}</td>
+                      <td>{{expense.amount}}</td>  
+                      <td>{{expense.date}}</td>                
+                  </tr>
+                  {% endfor %}
+              {% else %}
+                  <tr>
+                    <div class='d-flex justify-content-center'>
+                      <td colspan="6" class='text-sm-center'>No report found.</td>
+                    </div>
+                  </tr>     
+              {% endif %}
+            </tbody>
+          </table>
+          <br>
+          {% if total_expenses %}
+            <table class="table table-bordered">
+              <thead>
+                  <tr> 
+                      <th scope="col">Total Expenses</th>
+                      <th scope="col">{{total_expenses}}</th>
+                  </tr>
+              </thead>
+          {% endif %}
+        <script>
+            document.getElementById("printButton").addEventListener("click", function () {
+                window.print();
+            });
+        </script>
+       
+     
+{% endblock content%}
