@@ -34,42 +34,18 @@
                 <td>{{client.particulars}}</td>
                 <td>{{client.email}}</td>
                 <td>{{client.joining_date}}</td>
-                <td> <a href="{% url 'company:client-update' client.id %}" class='btn btn-primary'>View</a> | <a href="{% url 'company:client-delete' client.id %}" class='btn btn-danger'>Delete</a>
-                  |<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateModal">
-                    Update Data
-                  </button>
-                </td>
+                <td> <a href="{% url 'company:client-update' client.id  %}" class='btn btn-primary'>View</a> | <a href="{% url 'company:client-delete' client.id %}" class='btn btn-danger'>Delete</a>
+              
+
+
               </tr>
 
             {% endfor %}
              
             </tbody>
           </table>
-          <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="updateModalLabel">Update Data</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <!-- Your form for updating data goes here -->
-                  <form method="post" action="#">
-                    {% csrf_token %}
-                    <!-- Form fields go here -->
-                    <!-- Example: -->
-                    <div class="form-group">
-                      <label for="updateData">Update Data:</label>
-                      <input type="text" class="form-control" id="updateData" name="updateData">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
+          
+
     </div>
 
 

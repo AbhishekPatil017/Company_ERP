@@ -78,7 +78,7 @@ def client_form(request):
             customer.user=request.user
             customer.save()
             return redirect('company:client-list')
-    context={'form':form,'client':'client'}
+    context={'form':form,'client':'client','client_form':'client_form'}
     return render(request,'company/customer_form.html',context)
 
 @login_required
@@ -101,7 +101,7 @@ def client_delete(request,id):
     client=Customer.objects.filter(customer_type='client').get(id=id)
     if request.method == 'POST':
         client.delete()
-        return redirect('comapny:client-list')
+        return redirect('company:client-list')
     context={'client_delete':'client_delete','client':client}
     return render(request,'company/customer_delete.html',context)
 
