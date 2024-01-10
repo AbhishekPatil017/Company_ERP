@@ -58,11 +58,17 @@ def dashboard(request):
 def client_list(request):
 
     search=request.GET.get('search')
+    sort_order=request.GET.get('sort_order')
+    
+
     if search:
-        client_list=Customer.objects.filter(user=request.user,customer_type='client',name__icontains=search)
+        client_list=Customer.objects.filter(user=request.user,customer_type='client',name__icontains=search).order_by('registered_date')
 
     else:
-        client_list=Customer.objects.filter(user=request.user,customer_type='client')
+        if sort_order == 'ascending':
+            client_list=Customer.objects.filter(user=request.user,customer_type='client').order_by('-registered_date')
+        else:
+            client_list=Customer.objects.filter(user=request.user,customer_type='client').order_by('registered_date')
     context={'client_list':client_list}
     return render(request,'company/client_list.html',context)
 
